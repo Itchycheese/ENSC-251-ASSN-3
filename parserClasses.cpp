@@ -37,14 +37,22 @@ void TokenList::append(Token *token) {
 //Modifies: size_t tokenLength, and bool complete
 //(Optionally): may modify offset
 //Does NOT modify any other member variable of Tokenizer
-void Tokenizer::prepareNextToken(){/*Fill in implementation */ }
+void Tokenizer::prepareNextToken()
+{/*Fill in implementation */
+
+}
 
 //Sets the current string to be tokenized
 //Resets all Tokenizer state variables
 //Calls Tokenizer::prepareNextToken() as the last statement before returning.
 void Tokenizer::setString(string *str)
 {/*Fill in implementation */
-
+    complete = false;
+    offset = 0;
+    tokenLength =0;
+    str = str;
+    prepareNextToken();
+    return 0;
 }
 
 //Returns the next token. Hint: consider the substr function

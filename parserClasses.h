@@ -8,6 +8,15 @@ using namespace std;
 
 //Declare your variables for storing delimiters here:
 
+string delimiters_single_char  = " ,.;:<>'[]{}()_?/'`~!@#$%^&*|-_\"=+";
+string delimiters_1 = "<=";
+string delimiters_2 = "=>";
+string delimiters_3 = ":=";
+string delimiters_4 = "<>";
+string delimiters_5 = "/=";
+string delimiters_6 = "**";
+string delimiters_7 = ">=";
+
 //Token class for a doubly-linked list of string tokens
 class Token {
 private:
