@@ -8,14 +8,17 @@ using namespace std;
 
 //Declare your variables for storing delimiters here:
 
-string delimiters_single_char  = " ,.;:<>'[]{}()_?/'`~!@#$%^&*|-_\"=+";
-string delimiters_1 = "<=";
-string delimiters_2 = "=>";
-string delimiters_3 = ":=";
-string delimiters_4 = "<>";
-string delimiters_5 = "/=";
-string delimiters_6 = "**";
-string delimiters_7 = ">=";
+string const delimiters_single_char  = " ,.;:<>'[]{}()_?/'`~!@#$%^&*|-_\"=+"; //single char delimiters, we can use find_first_of() to find the first one of these
+string const delimiters_1 = "<="; // the following are all 2 char delimiters
+string const delimiters_2 = "=>"; // can use the find() function to get these.
+string const delimiters_3 = ":=";
+string const delimiters_4 = "/=";
+string const delimiters_5 = "**";
+string const delimiters_6 = ">=";
+string const delimiter_special_1 = "b\""; // bit vectors, basically everything until the next " char is in one token.
+string const delimiter_special_2 = "0\"";
+string const delimiter_special_3 = "x\"";
+string const delimiter_comments = "--"; // comment delimiter, everything after this to end of line is one token;
 
 //Token class for a doubly-linked list of string tokens
 class Token {

@@ -52,7 +52,7 @@ void Tokenizer::setString(string *str)
     tokenLength =0;
     str = str;
     prepareNextToken();
-    return 0;
+    return;
 }
 
 //Returns the next token. Hint: consider the substr function
