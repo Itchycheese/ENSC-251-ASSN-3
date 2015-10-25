@@ -1,7 +1,8 @@
 //Use only the following libraries:
 #include "parserClasses.h"
 #include <string>
-
+/// debug code
+#include <iostream>
 
 
 //****TokenList class function definitions******
@@ -47,38 +48,255 @@ size_t Tokenizer::givesSmallest(size_t a, size_t b) //returns the smaller of the
 void Tokenizer::prepareNextToken()
 {/*Fill in implementation */
 
-    //first step is to get the first token.
+
 
     string thestring;
     string firstchar;
     string secondchar;
+
+    ///debug code
+    cout << *str << endl;
 
     thestring = *str;
 
     size_t delimiter_test = string::npos;
     size_t quote_delim_test = string::npos;
     size_t next_delimiter;
+    size_t temp_offset;
 
+    //check if we are at the end of the line
+    if(offset >= thestring.length())
+    {
+        complete = true;
+        return;
+    }
+
+    //first step is to get the first token.
     //start of a new string
+    /*
     if (offset ==0)
     {
-        firstchar = the_string.substr(offset,1);
+        firstchar = thestring.substr(offset,1);
         delimiter_test = firstchar.find_first_of(" ,.;[]{}()_?`~!@#$%^&|_+",0);
         tokenLength = 1;
         return;
     }
-
+    */
     //normal cases
-    firstchar = the_string.substr(offset,1);
+    firstchar = thestring.substr(offset,1);
     delimiter_test = firstchar.find_first_of(" ,.;[]{}()_?`~!@#$%^&|_+",0);
-    if (delimiter_test == offset)
+    if (delimiter_test != offset)
     {
-         = find_first_of("b0x")
+        //checks for bit vectors
+        quote_delim_test = firstchar.find_first_of("b0x",0);
+        if(quote_delim_test == 0)
+        {
+            secondchar = thestring.substr(offset+1,1);
+            if(secondchar == "\\")
+            {
+                next_delimiter = thestring.find_first_of("\"", offset+1);
+                tokenLength = next_delimiter-offset+1;
+                return;
+            }
+        }
+
+        // checks for single quotes
+        quote_delim_test = firstchar.find_first_of("'",0);
+        if(quote_delim_test == 0)
+        {
+            next_delimiter = thestring.find_first_of("'", offset+1);
+            tokenLength = next_delimiter-offset+1;
+            return;
+        }
+
+        //checks for double quotes
+        quote_delim_test = firstchar.find_first_of("\"",0);
+        if(quote_delim_test == 0)
+        {
+            next_delimiter = thestring.find_first_of("\"", offset+1);
+            tokenLength = next_delimiter-offset+1;
+            return;
+        }
+
+        //checks for <=
+        quote_delim_test = firstchar.find_first_of("<",0);
+        if(quote_delim_test == 0)
+        {
+            secondchar = thestring.substr(offset+1,1);
+            if(secondchar == "=")
+            {
+                tokenLength = 2;
+                return;
+            }
+            else
+            {
+                tokenLength =1;
+                return;
+            }
+        }
+
+        //checks for =>
+        quote_delim_test = firstchar.find_first_of("=",0);
+        if(quote_delim_test == 0)
+        {
+            secondchar = thestring.substr(offset+1,1);
+            if(secondchar == ">")
+            {
+                tokenLength = 2;
+                return;
+            }
+            else
+            {
+                tokenLength =1;
+                return;
+            }
+        }
+
+        //checks for :=
+        quote_delim_test = firstchar.find_first_of(":",0);
+        if(quote_delim_test == 0)
+        {
+            secondchar = thestring.substr(offset+1,1);
+            if(secondchar == "=")
+            {
+                tokenLength = 2;
+                return;
+            }
+            else
+            {
+                tokenLength =1;
+                return;
+            }
+        }
+
+        //checks for /=
+        quote_delim_test = firstchar.find_first_of("//",0);
+        if(quote_delim_test == 0)
+        {
+            secondchar = thestring.substr(offset+1,1);
+            if(secondchar == "=")
+            {
+                tokenLength = 2;
+                return;
+            }
+            else
+            {
+                tokenLength =1;
+                return;
+            }
+        }
+
+        //checks for **
+        quote_delim_test = firstchar.find_first_of("*",0);
+        if(quote_delim_test == 0)
+        {
+            secondchar = thestring.substr(offset+1,1);
+            if(secondchar == "*")
+            {
+                tokenLength = 2;
+                return;
+            }
+            else
+            {
+                tokenLength =1;
+                return;
+            }
+        }
+
+        //checks for >=
+        quote_delim_test = firstchar.find_first_of(">",0);
+        if(quote_delim_test == 0)
+        {
+            secondchar = thestring.substr(offset+1,1);
+            if(secondchar == "=")
+            {
+                tokenLength = 2;
+                return;
+            }
+            else
+            {
+                tokenLength =1;
+                return;
+            }
+        }
+
+        //checks for --
+        quote_delim_test = firstchar.find_first_of("-",0);
+        if(quote_delim_test == 0)
+        {
+            secondchar = thestring.substr(offset+1,1);
+            if(secondchar == "-")
+            {
+                tokenLength = 9999;
+                return;
+            }
+            else
+            {
+                tokenLength =1;
+                return;
+            }
+        }
+
+        // checks for word entities
+        next_delimiter = thestring.find_first_of(",.;:<>[]{}()_?/`~!@#$%^&*|-_=+  b0x'\"-", offset+1);
+        firstchar = thestring.substr(next_delimiter,1);
+
+        //checks if it is a bit vector
+        quote_delim_test = firstchar.find_first_of("b0x",0);
+        if(quote_delim_test == 0)
+        {
+            secondchar = thestring.substr(offset+1,1);
+            if(secondchar == "\\")
+            {
+                next_delimiter = thestring.find_first_of("\"", offset+1);
+                tokenLength = quote_delim_test-offset;
+                return;
+            }
+            else
+            {
+                bool flag = true;
+                while (flag)
+                {
+                    next_delimiter = thestring.find_first_of(",.;:<>[]{}()_?/`~!@#$%^&*|-_=+  b0x'\"-", offset+1);
+                    firstchar = thestring.substr(next_delimiter,1);
+
+                    //checks if it is a bit vector
+                    quote_delim_test = firstchar.find_first_of("b0x",0);
+                    if(quote_delim_test == 0)
+                    {
+                        secondchar = thestring.substr(next_delimiter+1,1);
+                        if(secondchar == "\\")
+                        {
+                            next_delimiter = thestring.find_first_of("\"", next_delimiter+2);
+                            tokenLength = quote_delim_test-offset;
+                            continue;
+                        }
+                        else
+                        {
+                            flag = false;
+                        }
+                    }
+                }
+
+            }
+        }
+        else
+        {
+            quote_delim_test = firstchar.find_first_of(",.;:<>[]{}()_?/`~!@#$%^&*|-_=+  '\"-", offset+1);
+            tokenLength = quote_delim_test - offset;
+            return;
+        }
+
+    }
+    else
+    {
+        tokenLength = 1;
+        return;
     }
 
 
 
-    {
+    { //Probably Wrong code.
     /*
     size_t next_single_delimit = string::npos;
     size_t next_double_delimit = string::npos;
@@ -274,7 +492,6 @@ void Tokenizer::prepareNextToken()
         }
         */
         }
-        }
     }
 }
 
@@ -286,7 +503,7 @@ void Tokenizer::setString(string *str)
     complete = false;
     offset = 0;
     tokenLength =0;
-    str = str;
+    this->str = str;
     prepareNextToken();
     return;
 }
@@ -298,24 +515,39 @@ void Tokenizer::setString(string *str)
 string Tokenizer::getNextToken()
 {/*Fill in implementation */
 
-    /*
-    //first step is to identify what delimiter we are at.
-    string firstchar;
-    string secondchar;
     string the_string;
+    string the_token;
     the_string = *str;
-    size_t delimiter_test = string::npos;
 
-    firstchar = the_string.substr(offset,1);
-    delimiter_test = firstchar.find_first_of(" ,.;[]{}()_?`~!@#$%^&|_+",0);
-
-    if (delimiter_test ==0)
+    if(tokenLength == 9999) //9999 is the code for comment indications. Realisticall no token should be this long
     {
+        the_token = the_string.substr(offset,2);
+        offset = offset+2;
+        tokenLength = 14370;
+        ///debug
+        cout << the_token << " ";
 
+        return the_token;
     }
-    */
-    string the_string;
+    else if(tokenLength == 14370) //14370 is the code for comment token
+    {
+        the_token = the_string.substr(offset,string::npos);
+        complete = true;
+        ///debug
+        cout << the_token << " ";
 
+        return the_token;
+    }
+    else
+    {
+        the_token = the_string.substr(offset,tokenLength);
+        offset = offset+tokenLength;
+        prepareNextToken();
+        ///debug
+        cout << the_token << " ";
+
+        return the_token;
+    }
 
 }
 
