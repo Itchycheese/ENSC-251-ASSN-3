@@ -55,7 +55,8 @@ void Tokenizer::prepareNextToken()
     string secondchar;
 
     ///debug code
-    cout << *str << endl;
+    //cout << "the string is: "<<*str << endl;
+
 
     thestring = *str;
 
@@ -84,21 +85,9 @@ void Tokenizer::prepareNextToken()
     */
     //normal cases
     firstchar = thestring.substr(offset,1);
-    delimiter_test = firstchar.find_first_of(" ,.;[]{}()_?`~!@#$%^&|_+",0);
+    delimiter_test = firstchar.find_first_of(",.;[]{}()?`~!@#$%^&|+",0);
     if (delimiter_test != offset)
     {
-        //checks for bit vectors
-        quote_delim_test = firstchar.find_first_of("b0x",0);
-        if(quote_delim_test == 0)
-        {
-            secondchar = thestring.substr(offset+1,1);
-            if(secondchar == "\\")
-            {
-                next_delimiter = thestring.find_first_of("\"", offset+1);
-                tokenLength = next_delimiter-offset+1;
-                return;
-            }
-        }
 
         // checks for single quotes
         quote_delim_test = firstchar.find_first_of("'",0);
@@ -237,10 +226,6 @@ void Tokenizer::prepareNextToken()
             }
         }
 
-        // checks for word entities
-        next_delimiter = thestring.find_first_of(",.;:<>[]{}()_?/`~!@#$%^&*|-_=+  b0x'\"-", offset+1);
-        firstchar = thestring.substr(next_delimiter,1);
-
         //checks if it is a bit vector
         quote_delim_test = firstchar.find_first_of("b0x",0);
         if(quote_delim_test == 0)
@@ -257,7 +242,7 @@ void Tokenizer::prepareNextToken()
                 bool flag = true;
                 while (flag)
                 {
-                    next_delimiter = thestring.find_first_of(",.;:<>[]{}()_?/`~!@#$%^&*|-_=+  b0x'\"-", offset+1);
+                    next_delimiter = thestring.find_first_of(",.;:<>[]{}()?/`~!@#$%^&*|-=+b0x'\"-   ", offset+1);
                     firstchar = thestring.substr(next_delimiter,1);
 
                     //checks if it is a bit vector
@@ -280,11 +265,34 @@ void Tokenizer::prepareNextToken()
 
             }
         }
-        else
+
+        // checks for word entities
         {
-            quote_delim_test = firstchar.find_first_of(",.;:<>[]{}()_?/`~!@#$%^&*|-_=+  '\"-", offset+1);
-            tokenLength = quote_delim_test - offset;
-            return;
+            quote_delim_test = firstchar.find_first_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIGJLMNOPQRSTUVWXYZ",offset);
+            if(quote_delim_test == 0)
+            {
+                next_delimiter = thestring.find_first_of(",.;:<>[]{}()?/`~!@#$%^&*|-=+  '\"-", offset+1);
+                if (offset == 0)
+                {
+                    tokenLength = next_delimiter;
+                }
+                else
+                {
+                    tokenLength = next_delimiter - offset;
+                }
+                return;
+            }
+
+        }
+
+        // checks for whitespace.
+        {
+            quote_delim_test = firstchar.find_first_of("    ",0);
+            if(quote_delim_test == 0)
+            {
+
+                return;
+            }
         }
 
     }
@@ -544,7 +552,7 @@ string Tokenizer::getNextToken()
         offset = offset+tokenLength;
         prepareNextToken();
         ///debug
-        cout << the_token << " ";
+        cout << "the token is: \"" <<the_token << "\"\n";
 
         return the_token;
     }
