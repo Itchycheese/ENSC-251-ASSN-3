@@ -569,8 +569,51 @@ string Tokenizer::getNextToken()
 //On return from function, head, tail and the prev and next Tokens (in relation to the provided token) may be modified.
 void TokenList::deleteToken(Token *token) {/*Fill in implementation */}
 
-//Removes all comments from the tokenList including the -- marker
+//Removes all comments from the tokenList including the --  marker
 //Returns the number of comments removed
-int removeComments(TokenList &tokenList) {/*Fill in implementation */ }
+int removeComments(TokenList &tokenList)
+{
+    *TokenList temp,temp2,temp3,temp4 =nullptr;
+    temp = head;
+    temp2 = temp->next;
+    while (temp ->stringRep == "--") ///go into the loops until the first line is not a comment
+    {
+        head = temp2->next;
+        head ->prev = nullptr;
+        delete temp,temp2;
+        temp = head;
+        temp2 = temp->next;
+    }
+    while (temp2->next != nullptr) ///check the if it the comment until the end of the list
+    {
+        temp3 = temp->prev;
+        temp4=temp2->next;
+        if (temp->stringRep = "--")
+        {
+            temp3->next = temp4;
+            temp4->prev = temp3;
+            delete temp,temp2;
+            temp = temp4;
+            temp2 = temp4->next;
+        }
+        //case we not delete anything -> increment
+        temp = temp->next;
+        temp2 = temp2->next;
+    }
+    ///we check the last 2 node if they are comments
+
+    if (temp2->stringRep = "--") ///only the last node is a comment
+    {
+        tail =temp;
+        temp->next = nullptr;
+        delete temp2;
+    }
+    else if ( temp->stringRep="--") ///both 2 last node are comments
+    {
+        tail = temp->prev;
+        tail->next = nullptr;
+        delete temp,temp2;
+    }
+}
 
 
