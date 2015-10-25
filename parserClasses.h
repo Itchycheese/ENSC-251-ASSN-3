@@ -8,16 +8,22 @@ using namespace std;
 
 //Declare your variables for storing delimiters here:
 
-string const delimiters_single_char  = " ,.;:<>'[]{}()_?/'`~!@#$%^&*|-_\"=+"; //single char delimiters, we can use find_first_of() to find the first one of these
+//these ones we can search for any of them. they make no difference.
+string const delimiters_single_char  = ",.;:<>[]{}()_?/`~!@#$%^&*|-_=+"; //single char delimiters, we can use find_first_of() to find the first one of these
+string const delimiters_whitespace = "  "; // in this is a space and a tab
+//the following ones we need to search for both of the chars in sequence.
 string const delimiters_1 = "<="; // the following are all 2 char delimiters
 string const delimiters_2 = "=>"; // can use the find() function to get these.
 string const delimiters_3 = ":=";
 string const delimiters_4 = "/=";
 string const delimiters_5 = "**";
 string const delimiters_6 = ">=";
-string const delimiter_special_1 = "b\""; // bit vectors, basically everything until the next " char is in one token.
-string const delimiter_special_2 = "0\"";
-string const delimiter_special_3 = "x\"";
+// the following are special as they need to have quotes.
+string const delimiter_quote_1 = "b\""; // bit vectors, basically everything until the next " char is in one token.
+string const delimiter_quote_2 = "0\"";
+string const delimiter_quote_3 = "x\"";
+string const delimiter_singlequote = "'";
+string const delimiter_doublequote = "\"";
 string const delimiter_comments = "--"; // comment delimiter, everything after this to end of line is one token;
 
 //Token class for a doubly-linked list of string tokens
@@ -101,6 +107,7 @@ private:
 
 	//Include any helper functions here
 	//e.g. trimming whitespace, comment processing
+	size_t givesSmallest(size_t a, size_t b);
 
 	//Computes a new tokenLength for the next token
 	//Modifies: size_t tokenLength, and bool complete
@@ -125,15 +132,8 @@ public:
 
 	//Returns true if all possible tokens have been extracted from the current string (string *str)
 	bool isComplete() const
-        {
-            if (complete == true)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+    {
+        return complete;
 	}
 
 	//Returns the next token. Hint: consider the substr function
