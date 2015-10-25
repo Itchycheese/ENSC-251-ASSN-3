@@ -268,7 +268,7 @@ void Tokenizer::prepareNextToken()
 
         // checks for word entities
         {
-            quote_delim_test = firstchar.find_first_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIGJLMNOPQRSTUVWXYZ",0);
+            quote_delim_test = firstchar.find_first_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIGJLMNOPQRSTUVWXYZ0123456789",0);
             if(quote_delim_test == 0)
             {
                 next_delimiter = thestring.find_first_of(",.;:<>[]{}()?/`~!@#$%^&*|-=+  '\"-", offset+1);
