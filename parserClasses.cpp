@@ -86,7 +86,7 @@ void Tokenizer::prepareNextToken()
     //normal cases
     firstchar = thestring.substr(offset,1);
     delimiter_test = firstchar.find_first_of(",.;[]{}()?`~!@#$%^&|+",0);
-    if (delimiter_test != offset)
+    if (delimiter_test != 0)
     {
 
         // checks for single quotes
@@ -278,7 +278,7 @@ void Tokenizer::prepareNextToken()
                 }
                 else
                 {
-                    tokenLength = next_delimiter - offset+1;
+                    tokenLength = next_delimiter - offset;
                 }
                 return;
             }
