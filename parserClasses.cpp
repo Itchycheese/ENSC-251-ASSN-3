@@ -46,6 +46,40 @@ size_t Tokenizer::givesSmallest(size_t a, size_t b) //returns the smaller of the
 //Does NOT modify any other member variable of Tokenizer
 void Tokenizer::prepareNextToken()
 {/*Fill in implementation */
+
+    //first step is to get the first token.
+
+    string thestring;
+    string firstchar;
+    string secondchar;
+
+    thestring = *str;
+
+    size_t delimiter_test = string::npos;
+    size_t quote_delim_test = string::npos;
+    size_t next_delimiter;
+
+    //start of a new string
+    if (offset ==0)
+    {
+        firstchar = the_string.substr(offset,1);
+        delimiter_test = firstchar.find_first_of(" ,.;[]{}()_?`~!@#$%^&|_+",0);
+        tokenLength = 1;
+        return;
+    }
+
+    //normal cases
+    firstchar = the_string.substr(offset,1);
+    delimiter_test = firstchar.find_first_of(" ,.;[]{}()_?`~!@#$%^&|_+",0);
+    if (delimiter_test == offset)
+    {
+         = find_first_of("b0x")
+    }
+
+
+
+    {
+    /*
     size_t next_single_delimit = string::npos;
     size_t next_double_delimit = string::npos;
     size_t next_quote_delimit = string::npos;
@@ -240,6 +274,7 @@ void Tokenizer::prepareNextToken()
         }
         */
         }
+        }
     }
 }
 
@@ -263,6 +298,7 @@ void Tokenizer::setString(string *str)
 string Tokenizer::getNextToken()
 {/*Fill in implementation */
 
+    /*
     //first step is to identify what delimiter we are at.
     string firstchar;
     string secondchar;
@@ -277,6 +313,9 @@ string Tokenizer::getNextToken()
     {
 
     }
+    */
+    string the_string;
+
 
 }
 
