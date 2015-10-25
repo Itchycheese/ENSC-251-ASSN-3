@@ -534,7 +534,7 @@ string Tokenizer::getNextToken()
         offset = offset+2;
         tokenLength = 14370;
         ///debug
-        cout << the_token << " ";
+        cout << "the token is: \"" <<the_token << "\"\n";
 
         return the_token;
     }
@@ -543,7 +543,7 @@ string Tokenizer::getNextToken()
         the_token = the_string.substr(offset,string::npos);
         complete = true;
         ///debug
-        cout << the_token << " ";
+        cout << "the token is: \"" <<the_token << "\"\n";
 
         return the_token;
     }
