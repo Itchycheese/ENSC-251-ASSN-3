@@ -573,15 +573,18 @@ void TokenList::deleteToken(Token *token) {/*Fill in implementation */}
 //Returns the number of comments removed
 int removeComments(TokenList &tokenList)
 {
-    *TokenList temp,temp2,temp3,temp4 =nullptr;
-    temp = head;
-    temp2 = temp->next;
-    while (temp ->stringRep == "--") ///go into the loops until the first line is not a comment
+    Token *temp = nullptr;
+    Token *temp2= nullptr;
+    Token *temp3= nullptr;
+    Token *temp4= nullptr;
+    temp = tokenList.getFirst();
+    temp2 = temp ->getNext();
+    while (temp ->getStringRep()== "--") ///go into the loops until the first line is not a comment
     {
-        head = temp2->next;
+        tokenList->head = temp2->getNext; /// can we make a new setHead function -- illegal
         head ->prev = nullptr;
         delete temp,temp2;
-        temp = head;
+        temp = tokenList.getFirst();
         temp2 = temp->next;
     }
     while (temp2->next != nullptr) ///check the if it the comment until the end of the list
