@@ -227,17 +227,17 @@ void Tokenizer::prepareNextToken()
         }
 
         //checks if it is a bit vector
-        quote_delim_test = firstchar.find_first_of("b0x",0);
+        quote_delim_test = firstchar.find_first_of("bBOoxX",0);
         if(quote_delim_test == 0)
         {
             secondchar = thestring.substr(offset+1,1);
-            if(secondchar == "\\")
+            if(secondchar == "\"")
             {
-                next_delimiter = thestring.find_first_of("\"", offset+1);
+                next_delimiter = thestring.find_first_of("\"", offset+2);
                 tokenLength = quote_delim_test-offset;
                 return;
             }
-            else
+           /* else
             {
                 bool flag = true;
                 while (flag)
@@ -263,12 +263,12 @@ void Tokenizer::prepareNextToken()
                     }
                 }
 
-            }
+            }*/
         }
 
         // checks for word entities
         {
-            quote_delim_test = firstchar.find_first_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIGJLMNOPQRSTUVWXYZ",offset);
+            quote_delim_test = firstchar.find_first_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIGJLMNOPQRSTUVWXYZ",0);
             if(quote_delim_test == 0)
             {
                 next_delimiter = thestring.find_first_of(",.;:<>[]{}()?/`~!@#$%^&*|-=+  '\"-", offset+1);
@@ -278,7 +278,7 @@ void Tokenizer::prepareNextToken()
                 }
                 else
                 {
-                    tokenLength = next_delimiter - offset;
+                    tokenLength = next_delimiter - offset+1;
                 }
                 return;
             }
@@ -290,7 +290,8 @@ void Tokenizer::prepareNextToken()
             quote_delim_test = firstchar.find_first_of("    ",0);
             if(quote_delim_test == 0)
             {
-
+                offset = offset +1;
+                prepareNextToken();
                 return;
             }
         }
