@@ -608,41 +608,38 @@ int removeComments(TokenList &tokenList)
     temp2 = temp ->getNext();
     while (temp ->getStringRep()== "--") ///go into the loops until the first line is not a comment
     {
-        tokenList->head = temp2->getNext; /// can we make a new setHead function -- illegal
-        head ->prev = nullptr;
-        delete temp,temp2;
-        temp = tokenList.getFirst();
-        temp2 = temp->next;
+        tokenList.deleteToken(temp);
+        tokenList.deleteToken(temp2);
+        temp = tokenList.getFirst(); ///increment of temp and temp2
+        temp2 = temp->getNext;
     }
-    while (temp2->next != nullptr) ///check the if it the comment until the end of the list
+    while ((temp2->getNext) != nullptr) ///check the if it the comment until the end of the list
     {
-        temp3 = temp->prev;
-        temp4=temp2->next;
-        if (temp->stringRep = "--")
+        temp3 = temp->getPrev;
+        temp4=temp2->getNext;
+        if (temp->getStringRep = "--")
         {
-            temp3->next = temp4;
-            temp4->prev = temp3;
-            delete temp,temp2;
+            tokenList.deleteToken(temp);
+            tokenList.deleteToken(temp2);
             temp = temp4;
-            temp2 = temp4->next;
+            temp2 = temp4->getNext;
         }
         //case we not delete anything -> increment
-        temp = temp->next;
-        temp2 = temp2->next;
+        temp = temp->getNext;
+        temp2 = temp2->getNext;
     }
     ///we check the last 2 node if they are comments
 
-    if (temp2->stringRep = "--") ///only the last node is a comment
+    if (temp2->getStringRep= "--") ///only the last node is a comment
     {
-        tail =temp;
-        temp->next = nullptr;
-        delete temp2;
+
+        temp->getNext = nullptr;
+        tokenList.deleteToken(temp2);
     }
-    else if ( temp->stringRep="--") ///both 2 last node are comments
+    else if ( temp->getStringRep="--") ///both 2 last node are comments
     {
-        tail = temp->prev;
-        tail->next = nullptr;
-        delete temp,temp2;
+        tokenList.deleteToken (temp);
+        tokenList.deleteToken (temp2);
     }
 }
 
