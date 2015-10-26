@@ -1,3 +1,7 @@
+/*
+Name : Isaac Cheng Hui Tan (301247997), Tran Xuan Nhan Le [Ray] (301243743)
+ENSC 251 Assignment 3
+*/
 #ifndef PARSERCLASSES_H_
 #define PARSERCLASSES_H_
 

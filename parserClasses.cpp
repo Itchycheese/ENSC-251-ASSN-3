@@ -1,8 +1,13 @@
+/*
+Name : Isaac Cheng Hui Tan (301247997), Tran Xuan Nhan Le [Ray] (301243743)
+ENSC 251 Assignment 3
+*/
+
 //Use only the following libraries:
 #include "parserClasses.h"
 #include <string>
 /// debug code
-#include <iostream>
+//#include <iostream>
 
 
 //****TokenList class function definitions******
@@ -41,6 +46,7 @@ size_t Tokenizer::givesSmallest(size_t a, size_t b) //returns the smaller of the
     else
         return b;
 }
+
 //Computes a new tokenLength for the next token
 //Modifies: size_t tokenLength, and bool complete
 //(Optionally): may modify offset
@@ -234,36 +240,9 @@ void Tokenizer::prepareNextToken()
             if(secondchar == "\"")
             {
                 next_delimiter = thestring.find_first_of("\"", offset+2);
-                tokenLength = quote_delim_test-offset;
+                tokenLength = next_delimiter-offset+1;
                 return;
             }
-           /* else
-            {
-                bool flag = true;
-                while (flag)
-                {
-                    next_delimiter = thestring.find_first_of(",.;:<>[]{}()?/`~!@#$%^&*|-=+b0x'\"-   ", offset+1);
-                    firstchar = thestring.substr(next_delimiter,1);
-
-                    //checks if it is a bit vector
-                    quote_delim_test = firstchar.find_first_of("b0x",0);
-                    if(quote_delim_test == 0)
-                    {
-                        secondchar = thestring.substr(next_delimiter+1,1);
-                        if(secondchar == "\\")
-                        {
-                            next_delimiter = thestring.find_first_of("\"", next_delimiter+2);
-                            tokenLength = quote_delim_test-offset;
-                            continue;
-                        }
-                        else
-                        {
-                            flag = false;
-                        }
-                    }
-                }
-
-            }*/
         }
 
         // checks for word entities
@@ -296,211 +275,20 @@ void Tokenizer::prepareNextToken()
             }
         }
 
+        // checks for newlines
+        {
+            quote_delim_test = firstchar.find_first_of("\n",0);
+            if(quote_delim_test == 0)
+            {
+                complete = true;
+                return;
+            }
+        }
     }
     else
     {
         tokenLength = 1;
         return;
-    }
-
-
-
-    { //Probably Wrong code.
-    /*
-    size_t next_single_delimit = string::npos;
-    size_t next_double_delimit = string::npos;
-    size_t next_quote_delimit = string::npos;
-    size_t next_whitespace = string::npos;
-    size_t next_comment = string::npos;
-    size_t pos_next_delimiter = string::npos;
-    size_t temp = string::npos;
-    size_t temp2 = string::npos;
-    size_t temp3 = string::npos;
-    size_t temp4 = string::npos;
-    string the_string = *str;
-    string type_of_delimiter_next;
-    string type_of_delimiter_temp1;
-    string type_of_delimiter_temp2;
-    string type_of_delimiter_temp3;
-    string type_of_delimiter_temp4;
-
-    size_t new_offset;
-
-    //finds the next whitespace delimiter
-    next_whitespace = the_string.find_first_of(delimiters_whitespace, offset);
-
-    //finds the next single character delimiter
-    next_single_delimit = the_string.find_first_of(delimiters_single_char, offset);
-
-    // this part finds the next double-type character delimiter
-    {
-        next_double_delimit = the_string.find_first_of(delimiters_1, offset);
-        temp = the_string.find_first_of(delimiters_2, offset);
-        next_double_delimit = givesSmallest(next_double_delimit, temp);
-        temp = the_string.find_first_of(delimiters_3, offset);
-        next_double_delimit = givesSmallest(next_double_delimit, temp);
-        temp = the_string.find_first_of(delimiters_4, offset);
-        next_double_delimit = givesSmallest(next_double_delimit, temp);
-        temp = the_string.find_first_of(delimiters_5, offset);
-        next_double_delimit = givesSmallest(next_double_delimit, temp);
-        temp = the_string.find_first_of(delimiters_6, offset);
-        next_double_delimit = givesSmallest(next_double_delimit, temp);
-    }
-
-    // this part finds the next quote-type delimiter
-    {
-        next_quote_delimit = the_string.find_first_of(delimiter_quote_1);
-        temp = the_string.find_first_of(delimiter_quote_2);
-        next_quote_delimit = givesSmallest(next_quote_delimit, temp);
-        temp = the_string.find_first_of(delimiter_quote_3);
-        next_quote_delimit = givesSmallest(next_quote_delimit, temp);
-        temp = the_string.find_first_of(delimiter_singlequote);
-        next_quote_delimit = givesSmallest(next_quote_delimit, temp);
-        temp = the_string.find_first_of(delimiter_doublequote);
-        next_quote_delimit = givesSmallest(next_quote_delimit, temp);
-    }
-
-    // this part finds the next comment delimiter (if any)
-    next_comment = the_string.find_first_of(delimiter_comments, offset);
-
-    //this part finds which type of delimiter is next
-    {
-        //checks whitespace and singles.
-        {
-            if(next_whitespace == string::npos && next_single_delimit == string::npos)
-            {
-                type_of_delimiter_temp1 = "neither";
-            }
-            else if(next_whitespace < next_single_delimit)
-            {
-                type_of_delimiter_temp1 = "whitespace";
-                temp = next_whitespace;
-            }
-            else
-            {
-                type_of_delimiter_temp1 = "single";
-                temp = next_single_delimit;
-            }
-        }
-
-        //checks doubles and quotes
-        {
-            if(next_double_delimit == string::npos && next_quote_delimit == string::npos)
-            {
-                type_of_delimiter_temp2 = "neither";
-            }
-            else if(next_double_delimit < next_quote_delimit)
-            {
-                type_of_delimiter_temp2 = "double";
-                temp2 = next_double_delimit;
-            }
-            else
-        {
-            type_of_delimiter_temp2 = "quote";
-            temp2 = next_quote_delimit;
-        }
-        }
-
-        //2nd tier checking
-        {
-            if (type_of_delimiter_temp1 == "neither" && type_of_delimiter_temp2 != "neither")
-            {
-                temp3 = temp2;
-                type_of_delimiter_temp3 = type_of_delimiter_temp2;
-            }
-            else if (type_of_delimiter_temp1 != "neither" && type_of_delimiter_temp2 == "neither")
-            {
-                temp3 = temp2;
-                type_of_delimiter_temp3 = type_of_delimiter_temp1;
-            }
-            else if (type_of_delimiter_temp1 == "neither" && type_of_delimiter_temp2 == "neither")
-            {
-                type_of_delimiter_temp3 = "neither";
-            }
-            else if( temp2 < temp)
-            {
-                temp3 = temp2;
-                type_of_delimiter_temp3 = type_of_delimiter_temp2;
-            }
-            else if(temp < temp2)
-            {
-                temp3 = temp;
-                type_of_delimiter_temp3 = type_of_delimiter_temp1;
-            }
-            else
-            {
-                return;
-            }
-        }
-
-        // 3rd tier check
-        {
-            if (type_of_delimiter_temp3 == "neither" && next_comment != string::npos)
-            {
-                temp4 = next_comment;
-                type_of_delimiter_temp4 = "comment";
-            }
-            else if (type_of_delimiter_temp3 != "neither" && next_comment == string::npos)
-            {
-                temp4 = temp3;
-                type_of_delimiter_temp4 = type_of_delimiter_temp3;
-            }
-            else if (type_of_delimiter_temp3 == "neither" && next_comment == string::npos)
-            {
-                type_of_delimiter_temp4 = "neither";
-            }
-            else if( temp3 < next_comment)
-            {
-                temp4 = temp3;
-                type_of_delimiter_temp4 = type_of_delimiter_temp3;
-            }
-            else if(next_comment < temp3)
-            {
-                temp4 = next_comment;
-                type_of_delimiter_temp4 = "comment";
-            }
-            else
-            {
-                return;
-            }
-        }
-    }
-
-
-    // This part gets the token
-    {
-        if(type_of_delimiter_temp4 == "neither")
-        {
-            complete = true;
-            tokenLength =0;
-            return;
-        }
-
-        new_offset = temp4;
-
-        tokenLength = (new_offset - offset)-1;
-        return;
-
-        /* this code is wrong. Ignore it*/
-        {
-        /*both these types of tokens dont care about what ends them.
-        if(type_of_delimiter_temp4 == "whitespace" || type_of_delimiter_temp4 == "single")
-        {
-            pos_next_delimiter = the_string.find_first_of("   ,.;:<>'[]{}()_?/'`~!@#$%^&*|-_\"=+", new_offset);
-            if (pos_next_delimiter == new_offset+1)
-            {
-                    offset = offset+2;
-                    tokenLength = 0;
-                    return;
-            }
-            else
-            {
-                tokenLength = (pos_next_delimiter - new_offset)-2;
-                return;
-            }
-        }
-        */
-        }
     }
 }
 
@@ -528,13 +316,13 @@ string Tokenizer::getNextToken()
     string the_token;
     the_string = *str;
 
-    if(tokenLength == 9999) //9999 is the code for comment indications. Realisticall no token should be this long
+    if(tokenLength == 9999) //9999 is the code for comment indications. Realistically no token should be this long
     {
         the_token = the_string.substr(offset,2);
         offset = offset+2;
         tokenLength = 14370;
         ///debug
-        cout << "the token is: \"" <<the_token << "\"\n";
+        //cout << "the token is: \"" <<the_token << "\"\n";
 
         return the_token;
     }
@@ -543,7 +331,7 @@ string Tokenizer::getNextToken()
         the_token = the_string.substr(offset,string::npos);
         complete = true;
         ///debug
-        cout << "the token is: \"" <<the_token << "\"\n";
+        //cout << "the token is: \"" <<the_token << "\"\n";
 
         return the_token;
     }
@@ -553,7 +341,7 @@ string Tokenizer::getNextToken()
         offset = offset+tokenLength;
         prepareNextToken();
         ///debug
-        cout << "the token is: \"" <<the_token << "\"\n";
+        //cout << "the token is: \"" <<the_token << "\"\n";
 
         return the_token;
     }
@@ -573,13 +361,17 @@ void TokenList::deleteToken(Token *token)
     Token *temp2= nullptr;
     if (token != nullptr)
     {
-        if (token->prev = nullptr) /// case token is the first node
+        if(token->prev == nullptr && token->next == nullptr)
+        {
+            delete token;
+        }
+        else if (token->prev == nullptr) /// case token is the first node
         {
             head = token->next;
             head ->prev= nullptr;
             delete token;
         }
-        else if (token->next = nullptr) /// case token is the last node
+        else if (token->next == nullptr) /// case token is the last node
         {
             tail = token->prev;
             tail-> next = nullptr;
@@ -611,32 +403,32 @@ int removeComments(TokenList &tokenList)
         tokenList.deleteToken(temp);
         tokenList.deleteToken(temp2);
         temp = tokenList.getFirst(); ///increment of temp and temp2
-        temp2 = temp->getNext;
+        temp2 = temp->getNext();
     }
-    while ((temp2->getNext) != nullptr) ///check the if it the comment until the end of the list
+    while ((temp2->getNext()) != nullptr) ///check the if it the comment until the end of the list
     {
-        temp3 = temp->getPrev;
-        temp4=temp2->getNext;
-        if (temp->getStringRep = "--")
+        temp3 = temp->getPrev();
+        temp4=temp2->getNext();
+        if (temp->getStringRep() == "--")
         {
             tokenList.deleteToken(temp);
             tokenList.deleteToken(temp2);
             temp = temp4;
-            temp2 = temp4->getNext;
+            temp2 = temp4->getNext();
         }
         //case we not delete anything -> increment
-        temp = temp->getNext;
-        temp2 = temp2->getNext;
+        temp = temp->getNext();
+        temp2 = temp2->getNext();
     }
     ///we check the last 2 node if they are comments
 
-    if (temp2->getStringRep= "--") ///only the last node is a comment
+    if (temp2->getStringRep()== "--") ///only the last node is a comment
     {
 
-        temp->getNext = nullptr;
+        temp->setNext(nullptr);
         tokenList.deleteToken(temp2);
     }
-    else if ( temp->getStringRep="--") ///both 2 last node are comments
+    else if ( temp->getStringRep()=="--") ///both 2 last node are comments
     {
         tokenList.deleteToken (temp);
         tokenList.deleteToken (temp2);
