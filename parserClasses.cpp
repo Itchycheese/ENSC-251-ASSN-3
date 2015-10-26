@@ -567,7 +567,34 @@ string Tokenizer::getNextToken()
 //Removes the token from the linked list if it is not null
 //Deletes the token
 //On return from function, head, tail and the prev and next Tokens (in relation to the provided token) may be modified.
-void TokenList::deleteToken(Token *token) {/*Fill in implementation */}
+void TokenList::deleteToken(Token *token)
+{
+    Token *temp= nullptr;
+    Token *temp2= nullptr;
+    if (token != nullptr)
+    {
+        if (token->prev = nullptr) /// case token is the first node
+        {
+            head = token->next;
+            head ->prev= nullptr;
+            delete token;
+        }
+        else if (token->next = nullptr) /// case token is the last node
+        {
+            tail = token->prev;
+            tail-> next = nullptr;
+            delete token;
+        }
+        else                            /// case token is the middle node
+        {
+            temp = token->prev;
+            temp->next = token->next;
+            temp2 = token->next;
+            temp2->prev = temp;
+            delete token;
+        }
+    }
+}
 
 //Removes all comments from the tokenList including the --  marker
 //Returns the number of comments removed
