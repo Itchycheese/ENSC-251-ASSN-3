@@ -3,10 +3,10 @@ b"12345678"
 O"12345678"
 "12345678"
 library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_1164.ALL; --this is a comment
 
 entity random is
-    generic ( width : integer :=  32 ); 
+    generic ( width : integer :=  32 ); --just more comment
 port (
       clk : in std_logic;
       random_num : out std_logic_vector (width-1 downto 0)   --output vector            

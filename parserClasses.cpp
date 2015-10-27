@@ -72,7 +72,7 @@ void Tokenizer::prepareNextToken()
     size_t temp_offset;
 
     //check if we are at the end of the line
-    if(offset >= thestring.length())
+    if(offset >= thestring.length()) //check if it the end of string, if yes stop prepare the next token
     {
         complete = true;
         return;
@@ -92,10 +92,10 @@ void Tokenizer::prepareNextToken()
     //normal cases
     firstchar = thestring.substr(offset,1);
     delimiter_test = firstchar.find_first_of(",.;[]{}()?`~!@#$%^&|+",0);
-    if (delimiter_test != 0)
+    if (delimiter_test != 0) // checking if the first char, if first char is not one of the single delimiter, then token length is not 1
     {
 
-        // checks for single quotes
+        /// checks for single quotes - if yes the entire quote will be 1 token
         quote_delim_test = firstchar.find_first_of("'",0);
         if(quote_delim_test == 0)
         {
@@ -104,7 +104,7 @@ void Tokenizer::prepareNextToken()
             return;
         }
 
-        //checks for double quotes
+        ///checks for double quotes - if yes, the entire double quote will be 1 token
         quote_delim_test = firstchar.find_first_of("\"",0);
         if(quote_delim_test == 0)
         {
@@ -113,7 +113,7 @@ void Tokenizer::prepareNextToken()
             return;
         }
 
-        //checks for <=
+        ///checks for <= delimiter
         quote_delim_test = firstchar.find_first_of("<",0);
         if(quote_delim_test == 0)
         {
@@ -125,12 +125,12 @@ void Tokenizer::prepareNextToken()
             }
             else
             {
-                tokenLength =1;
+                tokenLength =1; // if it not double delimiter, it will be a single delimiter token
                 return;
             }
         }
 
-        //checks for =>
+        ///checks for => delimiter
         quote_delim_test = firstchar.find_first_of("=",0);
         if(quote_delim_test == 0)
         {
@@ -142,12 +142,12 @@ void Tokenizer::prepareNextToken()
             }
             else
             {
-                tokenLength =1;
+                tokenLength =1;// if it not double delimiter, it will be a single delimiter token
                 return;
             }
         }
 
-        //checks for :=
+        ///checks for := double delimiter
         quote_delim_test = firstchar.find_first_of(":",0);
         if(quote_delim_test == 0)
         {
@@ -159,12 +159,12 @@ void Tokenizer::prepareNextToken()
             }
             else
             {
-                tokenLength =1;
+                tokenLength =1; // it is a single delimiter in this case
                 return;
             }
         }
 
-        //checks for /=
+        ///checks for /= double delimiter
         quote_delim_test = firstchar.find_first_of("//",0);
         if(quote_delim_test == 0)
         {
@@ -176,12 +176,12 @@ void Tokenizer::prepareNextToken()
             }
             else
             {
-                tokenLength =1;
+                tokenLength =1; // single delimiter found
                 return;
             }
         }
 
-        //checks for **
+        ///checks for ** double delimiter
         quote_delim_test = firstchar.find_first_of("*",0);
         if(quote_delim_test == 0)
         {
@@ -193,12 +193,12 @@ void Tokenizer::prepareNextToken()
             }
             else
             {
-                tokenLength =1;
+                tokenLength =1; // single delimiter * found
                 return;
             }
         }
 
-        //checks for >=
+        ///checks for >= double delimiter
         quote_delim_test = firstchar.find_first_of(">",0);
         if(quote_delim_test == 0)
         {
@@ -210,12 +210,12 @@ void Tokenizer::prepareNextToken()
             }
             else
             {
-                tokenLength =1;
+                tokenLength =1; // single delimiter > found
                 return;
             }
         }
 
-        //checks for --
+        ///checks for -- double delimiter, this also the begin of a comments for the removeComment function later
         quote_delim_test = firstchar.find_first_of("-",0);
         if(quote_delim_test == 0)
         {
@@ -227,12 +227,12 @@ void Tokenizer::prepareNextToken()
             }
             else
             {
-                tokenLength =1;
+                tokenLength =1; // single delimiter - found
                 return;
             }
         }
 
-        //checks if it is a bit vector
+        ///checks if it is a bit vector
         quote_delim_test = firstchar.find_first_of("bBOoxX",0);
         if(quote_delim_test == 0)
         {
@@ -241,30 +241,23 @@ void Tokenizer::prepareNextToken()
             {
                 next_delimiter = thestring.find_first_of("\"", offset+2);
                 tokenLength = next_delimiter-offset+1;
-                return;
+                return; /// if the bit vector condition is not right, this mean the token is the begin of a work entities
             }
         }
 
-        // checks for word entities
+        /// checks for word entities - no delimiter or bit vector, it just a normal words - numbers entities token
         {
-            quote_delim_test = firstchar.find_first_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIGJLMNOPQRSTUVWXYZ0123456789",0);
-            if(quote_delim_test == 0)
+            quote_delim_test = firstchar.find_first_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIGJLMNOPQRSTUVWXYZ0123456789",0); //case sensitive and number as a token
+            if(quote_delim_test == 0) // all other case hase been cover -> thus, it must be a word-number entity token.
             {
-                next_delimiter = thestring.find_first_of(",.;:<>[]{}()?/`~!@#$%^&*|-=+  '\"-", offset+1);
-                if (offset == 0)
-                {
-                    tokenLength = next_delimiter;
-                }
-                else
-                {
-                    tokenLength = next_delimiter - offset;
-                }
+                next_delimiter = thestring.find_first_of(",.;:<>[]{}()?/`~!@#$%^&*|-=+  '\"-", offset+1); // find the next single-double delimiter/ space/tab as the END of this words-numbers entity token
+                tokenLength = next_delimiter - offset;
                 return;
             }
 
         }
 
-        // checks for whitespace.
+        /// checks for whitespace. if it is a white space/tab, we will skip this -> it 's not a token
         {
             quote_delim_test = firstchar.find_first_of("    ",0);
             if(quote_delim_test == 0)
@@ -275,7 +268,7 @@ void Tokenizer::prepareNextToken()
             }
         }
 
-        // checks for newlines
+        /// checks for newlines -> skip new line, it is not a token
         {
             quote_delim_test = firstchar.find_first_of("\n",0);
             if(quote_delim_test == 0)
@@ -296,7 +289,7 @@ void Tokenizer::prepareNextToken()
 //Resets all Tokenizer state variables
 //Calls Tokenizer::prepareNextToken() as the last statement before returning.
 void Tokenizer::setString(string *str)
-{/*Fill in implementation */
+{
     complete = false;
     offset = 0;
     tokenLength =0;
@@ -326,7 +319,7 @@ string Tokenizer::getNextToken()
 
         return the_token;
     }
-    else if(tokenLength == 14370) //14370 is the code for comment token
+    else if(tokenLength == 14370) //14370 is the code for comment token, treat everything until the end of string as one token
     {
         the_token = the_string.substr(offset,string::npos);
         complete = true;
@@ -361,23 +354,23 @@ void TokenList::deleteToken(Token *token)
     Token *temp2= nullptr;
     if (token != nullptr)
     {
-        if(token->prev == nullptr && token->next == nullptr)
+        if(token->prev == nullptr && token->next == nullptr) /// case only one token inside the list, we just delete the token
         {
             delete token;
         }
-        else if (token->prev == nullptr) /// case token is the first node
+        else if (token->prev == nullptr) /// case token is the first node, delete token and change the head pointer, also ajust next and previous
         {
             head = token->next;
             head ->prev= nullptr;
             delete token;
         }
-        else if (token->next == nullptr) /// case token is the last node
+        else if (token->next == nullptr) /// case token is the last node, delete token, adjust the tail pointer, prev and next pointer
         {
             tail = token->prev;
             tail-> next = nullptr;
             delete token;
         }
-        else                            /// case token is the middle node
+        else                            /// case token is the middle node, delete the token, adjust next and prev pointer. temp is a pointer point to the previous node of the token, temp2 is point to the next node of the token
         {
             temp = token->prev;
             temp->next = token->next;
@@ -392,13 +385,13 @@ void TokenList::deleteToken(Token *token)
 //Returns the number of comments removed
 int removeComments(TokenList &tokenList)
 {
-    Token *temp = nullptr;
-    Token *temp2= nullptr;
-    Token *temp3= nullptr;
-    Token *temp4= nullptr;
+    Token *temp = nullptr; // temp is the pointer point to the node that we check if it a comment
+    Token *temp2= nullptr; // temp2 is the node next to the node contain "--", which is the rest of the comment
+    Token *temp3= nullptr; // temp3 is the node before the comment
+    Token *temp4= nullptr; // temp4 is the node after the comment
     temp = tokenList.getFirst();
     temp2 = temp ->getNext();
-    while (temp ->getStringRep()== "--") ///go into the loops until the first line is not a comment
+    while (temp ->getStringRep()== "--") ///the case the first line is a comment - go into the loops until the first line is not a comment
     {
         tokenList.deleteToken(temp);
         tokenList.deleteToken(temp2);
@@ -407,22 +400,23 @@ int removeComments(TokenList &tokenList)
     }
     while ((temp2->getNext()) != nullptr) ///check the if it the comment until the end of the list
     {
-        temp3 = temp->getPrev();
+        temp3 = temp->getPrev(); //adjust temp3 and temp4 after the increment of temp and temp2 in previous loop
         temp4=temp2->getNext();
-        if (temp->getStringRep() == "--")
+        if (temp->getStringRep() == "--") // if temp is contain "--" temp and temp2 are comments
         {
             tokenList.deleteToken(temp);
             tokenList.deleteToken(temp2);
             temp = temp4;
-            temp2 = temp4->getNext();
+            temp2 = temp4->getNext(); //after delete the comments token, adjust temp and temp2 to the new position
         }
         //case we not delete anything -> increment
         temp = temp->getNext();
         temp2 = temp2->getNext();
     }
+    /// the above loop reach the end when temp and temp2 is the last 2 node of the token link list
     ///we check the last 2 node if they are comments
 
-    if (temp2->getStringRep()== "--") ///only the last node is a comment
+    if (temp2->getStringRep()== "--" && temp->getStringRep() != "--") ///only the last node is a comment
     {
 
         temp->setNext(nullptr);
