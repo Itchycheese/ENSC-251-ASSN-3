@@ -259,7 +259,7 @@ void Tokenizer::prepareNextToken()
 
         /// checks for whitespace. if it is a white space/tab, we will skip this -> it 's not a token
         {
-            quote_delim_test = firstchar.find_first_of("    ",0);
+            quote_delim_test = firstchar.find_first_of(" \t\r",0);
             if(quote_delim_test == 0)
             {
                 offset = offset +1;
