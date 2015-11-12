@@ -262,7 +262,7 @@ void Tokenizer::prepareNextToken()
             quote_delim_test = firstchar.find_first_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIGJLMNOPQRSTUVWXYZ0123456789",0); //case sensitive and number as a token
             if(quote_delim_test == 0) // all other case hase been cover -> thus, it must be a word-number entity token.
             {
-                next_delimiter = thestring.find_first_of(",.;:<>[]{}()?/`~!@#$%^&*|-=+  '\"-", offset+1); // find the next single-double delimiter/ space/tab as the END of this words-numbers entity token
+                next_delimiter = thestring.find_first_of(",.;:<>[]{}()?/`~!@#$%^&*|-=+  \t\r'\"-", offset+1); // find the next single-double delimiter/ space/tab as the END of this words-numbers entity token
                 tokenLength = next_delimiter - offset;
                 return;
             }
