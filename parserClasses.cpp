@@ -70,6 +70,7 @@ void Tokenizer::prepareNextToken()
     size_t quote_delim_test = string::npos;
     size_t next_delimiter;
     size_t temp_offset;
+    size_t non_quote_delimiter = string::npos;
 
     //check if we are at the end of the line
     if(offset >= thestring.length()) //check if it the end of string, if yes stop prepare the next token
@@ -100,6 +101,17 @@ void Tokenizer::prepareNextToken()
         if(quote_delim_test == 0)
         {
             next_delimiter = thestring.find_first_of("'", offset+1);
+            non_quote_delimiter = thestring.find_first_of(",.;[]{}()?`~!@#$%^&|+\<=:/*>- \t\r\n",offset+1);
+            if (non_quote_delimiter < next_delimiter)
+            {
+                tokenLength = 1;
+                return;
+            }
+            if (next_delimiter == string::npos)
+            {
+                tokenLength = 1;
+                return;
+            }
             tokenLength = next_delimiter-offset+1;
             return;
         }
