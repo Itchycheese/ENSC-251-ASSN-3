@@ -100,6 +100,11 @@ void Tokenizer::prepareNextToken()
         if(quote_delim_test == 0)
         {
             next_delimiter = thestring.find_first_of("'", offset+1);
+            if (next_delimiter == string::npos)
+            {
+                tokenLength = 1;
+                return;
+            }
             tokenLength = next_delimiter-offset+1;
             return;
         }

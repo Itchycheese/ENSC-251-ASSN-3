@@ -13,7 +13,7 @@ int main() {
 	Tokenizer tokenizer;
 
 	//Read in a file line-by-line and tokenize each line
-	sourceFile.open("test.vhd");
+	sourceFile.open("simpleAttributes.vhd");
 	if (!sourceFile.is_open()) {
 		cout << "Failed to open file" << endl;
 		return 1;
