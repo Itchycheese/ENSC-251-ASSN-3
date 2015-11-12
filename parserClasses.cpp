@@ -403,13 +403,42 @@ int removeComments(TokenList &tokenList)
     Token *temp4= nullptr; // temp4 is the node after the comment
     temp = tokenList.getFirst();
     temp2 = temp ->getNext();
-    while (temp ->getStringRep()== "--") ///the case the first line is a comment - go into the loops until the first line is not a comment
+    temp3 = temp2 ->getNext();
+    temp4 = temp ->getPrev();
+    while ( temp2 ->getNext() != nullptr)///delete the comment until the last two token
+    {
+        if ( temp->getStringRep() == "--")
+        {
+            tokenList.deleteToken(temp);
+            tokenList.deleteToken(temp2);
+            temp = temp3;
+            temp2 = temp3->getNext();
+            temp3 = temp2->getNext();
+        }
+        else
+        {
+            temp = temp2;
+            temp2 = temp3;
+            temp3 = temp3 ->getNext();
+        }
+    }
+    if (temp ->getStringRep() == "--")
+    {
+        tokenList.deleteToken(temp);
+        tokenList.deleteToken(temp2);
+    }
+    else if ( temp2->getStringRep()== "--")
+    {
+        tokenList.deleteToken(temp2);
+    }
+  /*  while (temp ->getStringRep()== "--") ///the case the first line is a comment - go into the loops until the first line is not a comment
     {
         tokenList.deleteToken(temp);
         tokenList.deleteToken(temp2);
         temp = tokenList.getFirst(); ///increment of temp and temp2
         temp2 = temp->getNext();
     }
+
     while ((temp2->getNext()) != nullptr) ///check the if it the comment until the end of the list
     {
         temp3 = temp->getPrev(); //adjust temp3 and temp4 after the increment of temp and temp2 in previous loop
@@ -439,6 +468,7 @@ int removeComments(TokenList &tokenList)
         tokenList.deleteToken (temp);
         tokenList.deleteToken (temp2);
     }
+    */
 }
 
 
